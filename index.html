@@ -17,6 +17,42 @@
         <textarea id="text-input" autofocus placeholder="Start typing here..."></textarea>
         
         <div class="controls">
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline Typing App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>My Personal Typing Practice</h1>
+        <div id="text-display">
+            <!-- Text goes here. Each character will be a span -->
+        </div>
+        <textarea id="text-input" autofocus placeholder="Start typing here..."></textarea>
+        
+        <div class="controls">
+            <label for="book-upload">Import a Book (TXT file):</label>
+            <input type="file" id="book-upload" accept=".txt">
+            
+            <!-- ADD THESE TWO LINES -->
+            <button id="reset-btn">Reset Test</button>
+            <button id="theme-toggle-btn">Toggle Dark Mode</button>
+            <!-- END ADDITIONS -->
+        </div>
+
+        <div class="metrics">
+            <p>Time: <span id="timer">0s</span></p>
+            <p>WPM: <span id="wpm">0</span></p>
+            <p>Accuracy: <span id="accuracy">100%</span></p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
             <label for="book-upload">Import a Book (TXT or PDF):</label>
             <!-- Updated accept attribute to include PDF -->
             <input type="file" id="book-upload" accept=".txt, .pdf">
@@ -32,3 +68,4 @@
     <script src="script.js" type="module"></script> <!-- Note type="module" is needed -->
 </body>
 </html>
+
