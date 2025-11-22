@@ -117,3 +117,15 @@ button#reset-btn:hover {
     color: var(--primary-color);
     margin-left: 5px;
 }
+/* Add this to the bottom of your existing style.css file */
+
+@keyframes flash {
+    0% { border-color: var(--error-underline); }
+    100% { border-color: var(--input-border); }
+}
+
+.error-flash {
+    animation: flash 0.2s linear 2;
+}
+
+
