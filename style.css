@@ -1,16 +1,31 @@
+/* --- Global Variables (Light Theme Defaults) --- */
 :root {
-    --primary-color: #007bff; /* A modern blue for accents */
-    --background-color: #f4f7f6; /* Light gray background */
+    --primary-color: #4a90e2; /* A vibrant blue for accents */
+    --background-color: #f0f4f8; /* Very light blue background */
     --card-bg: #ffffff; /* White background for the main container */
     --text-color: #333; /* Dark gray for main text */
-    --error-bg: #ffebeb; /* Subtle red for errors */
-    --error-underline: #e60000; /* Bright red underline */
-    --focus-color: #ced4da; /* Color for the current typing character */
-    --input-border: #ccc;
+    --error-bg: #ffebee; /* Subtle red for errors */
+    --error-underline: #f44336; /* Bright red underline */
+    --focus-color: #e3f2fd; /* Color for the current typing character highlight */
+    --input-border: #cfd8dc;
 }
 
+/* --- Dark Theme Overrides (Applied when body has .dark-theme class) --- */
+body.dark-theme {
+    --primary-color: #4dabf7; /* Brighter blue for dark contrast */
+    --background-color: #1a1a2e; /* Deep navy background */
+    --card-bg: #2a2a3e; /* Darker card background */
+    --text-color: #e0e0e0; /* Light gray for main text */
+    --error-bg: #5a1a1a; /* Darker red background error */
+    --error-underline: #ff5252;
+    --focus-color: #4f5b66;
+    --input-border: #555;
+}
+
+
+/* --- Base Styling --- */
 body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* A clean, professional font stack */
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background-color: var(--background-color);
     display: flex;
     justify-content: center;
@@ -18,6 +33,7 @@ body {
     min-height: 100vh;
     margin: 0;
     color: var(--text-color);
+    transition: background-color 0.5s, color 0.5s; /* Smooth transition for theme change */
 }
 
 .container {
@@ -25,13 +41,14 @@ body {
     max-width: 800px;
     background-color: var(--card-bg);
     padding: 30px;
-    border-radius: 12px; /* Softer corners */
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* Deeper, softer shadow */
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     text-align: center;
+    transition: background-color 0.5s, box-shadow 0.5s;
 }
 
 h1 {
-    color: #2c3e50;
+    color: var(--primary-color); /* Use primary color for title */
     margin-bottom: 25px;
     font-size: 1.8em;
 }
@@ -40,35 +57,44 @@ h1 {
     border: 1px solid var(--input-border);
     padding: 20px;
     margin-bottom: 20px;
-    font-size: 1.4em; /* Slightly larger, more readable text */
-    line-height: 1.6; /* Increased line height for better readability */
+    font-size: 1.4em;
+    line-height: 1.6;
     height: 160px;
     overflow-y: auto;
     text-align: left;
     white-space: pre-wrap;
     border-radius: 6px;
-    background-color: #fafafa;
+    background-color: var(--background-color); /* Matches background for cleaner look */
     cursor: text;
+    transition: background-color 0.5s;
 }
 
 /* Styles for correct and incorrect characters */
 .correct { color: var(--text-color); }
 .incorrect {
     background-color: var(--error-bg);
-    text-decoration: none;
-    border-bottom: 2px solid var(--error-underline); /* Subtle red underline instead of text-decoration */
+    border-bottom: 2px solid var(--error-underline);
     padding-bottom: 2px;
 }
 .current { background-color: var(--focus-color); }
+
+@keyframes flash {
+    0% { border-color: var(--error-underline); }
+    100% { border-color: var(--input-border); }
+}
+.error-flash { animation: flash 0.2s linear 2; }
+
 
 #text-input {
     width: 98%;
     padding: 15px;
     font-size: 1.2em;
     margin-bottom: 20px;
-    border: 2px solid var(--primary-color); /* Highlight the input field */
+    border: 2px solid var(--primary-color);
     border-radius: 6px;
-    box-sizing: border-box; /* Ensures padding doesn't increase width */
+    box-sizing: border-box;
+    background-color: var(--card-bg); /* Use card bg for input */
+    color: var(--text-color);
 }
 
 .controls {
@@ -83,22 +109,33 @@ h1 {
     border: 1px solid var(--input-border);
     border-radius: 4px;
     cursor: pointer;
+    color: var(--text-color);
+    background-color: var(--card-bg);
 }
 
-button#reset-btn {
+button { /* Applied to both Reset and Toggle buttons */
     background-color: var(--primary-color);
     color: white;
     border: none;
-    padding: 12px 20px;
+    padding: 12px 18px;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 1em;
+    font-size: 0.9em;
     transition: background-color 0.3s;
 }
 
-button#reset-btn:hover {
+button:hover {
     background-color: #0056b3;
 }
+
+#theme-toggle-btn {
+    background-color: #6c757d; /* Different color for toggle button */
+}
+
+#theme-toggle-btn:hover {
+     background-color: #5a6268;
+}
+
 
 .metrics {
     display: flex;
@@ -117,15 +154,3 @@ button#reset-btn:hover {
     color: var(--primary-color);
     margin-left: 5px;
 }
-/* Add this to the bottom of your existing style.css file */
-
-@keyframes flash {
-    0% { border-color: var(--error-underline); }
-    100% { border-color: var(--input-border); }
-}
-
-.error-flash {
-    animation: flash 0.2s linear 2;
-}
-
-
