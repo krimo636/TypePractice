@@ -185,7 +185,40 @@ document.addEventListener('DOMContentLoaded', () => {
         // Force the display to re-render default text highlights
         updateTextDisplayUI(textInput.value); 
     });
+        // --- Theme Toggle Logic ---
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    
+    function setTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeToggleBtn.textContent = 'Toggle Light Mode';
+        } else {
+            document.body.classList.remove('dark-theme');
+            themeToggleBtn.textContent = 'Toggle Dark Mode';
+        }
+        localStorage.setItem('typingAppTheme', theme);
+    }
+
+    // Check saved theme on load
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('typingAppTheme') || 'light'; // Default to light
+        setTheme(savedTheme);
+    }
+
+    // Toggle theme on button click
+    themeToggleBtn.addEventListener('click', () => {
+        const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+    });
+    
+    // Call loadTheme after all functions are defined, right above loadProgress()
+    loadTheme(); 
+    loadProgress(); // This was already here
+});
+
 
     // Initialize with default text or saved progress on load
     loadProgress();
 });
+
