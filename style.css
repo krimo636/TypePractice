@@ -1,0 +1,119 @@
+:root {
+    --primary-color: #007bff; /* A modern blue for accents */
+    --background-color: #f4f7f6; /* Light gray background */
+    --card-bg: #ffffff; /* White background for the main container */
+    --text-color: #333; /* Dark gray for main text */
+    --error-bg: #ffebeb; /* Subtle red for errors */
+    --error-underline: #e60000; /* Bright red underline */
+    --focus-color: #ced4da; /* Color for the current typing character */
+    --input-border: #ccc;
+}
+
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* A clean, professional font stack */
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: var(--text-color);
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 12px; /* Softer corners */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* Deeper, softer shadow */
+    text-align: center;
+}
+
+h1 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+}
+
+#text-display {
+    border: 1px solid var(--input-border);
+    padding: 20px;
+    margin-bottom: 20px;
+    font-size: 1.4em; /* Slightly larger, more readable text */
+    line-height: 1.6; /* Increased line height for better readability */
+    height: 160px;
+    overflow-y: auto;
+    text-align: left;
+    white-space: pre-wrap;
+    border-radius: 6px;
+    background-color: #fafafa;
+    cursor: text;
+}
+
+/* Styles for correct and incorrect characters */
+.correct { color: var(--text-color); }
+.incorrect {
+    background-color: var(--error-bg);
+    text-decoration: none;
+    border-bottom: 2px solid var(--error-underline); /* Subtle red underline instead of text-decoration */
+    padding-bottom: 2px;
+}
+.current { background-color: var(--focus-color); }
+
+#text-input {
+    width: 98%;
+    padding: 15px;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    border: 2px solid var(--primary-color); /* Highlight the input field */
+    border-radius: 6px;
+    box-sizing: border-box; /* Ensures padding doesn't increase width */
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.controls input[type="file"] {
+    padding: 10px;
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button#reset-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+button#reset-btn:hover {
+    background-color: #0056b3;
+}
+
+.metrics {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 15px;
+    border-top: 1px solid var(--input-border);
+}
+
+.metrics p {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin: 0;
+}
+
+.metrics span {
+    color: var(--primary-color);
+    margin-left: 5px;
+}
