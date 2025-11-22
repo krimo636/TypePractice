@@ -7,31 +7,57 @@ document.addEventListener('DOMContentLoaded', () => {
     const wpmEl = document.getElementById('wpm');
     const accuracyEl = document.getElementById('accuracy');
 
-    let testText = "The quick brown fox jumps over the lazy dog. This is some default text for practice. Use the file input below to load your favorite books.";
+    // Default text, if no saved text exists
+    let testText = "The quick brown fox jumps over the lazy dog. This is some default text for practice.";
     let startTime;
     let timerInterval;
     let typedCharacters = 0;
     let correctCharacters = 0;
     let testActive = false;
+    let currentInputIndex = 0; // Tracks where we are in the text
+
+    // --- Progress Tracking (localStorage) ---
+    function saveProgress() {
+        localStorage.setItem('typingAppText', testText);
+        localStorage.setItem('typingAppIndex', currentInputIndex);
+    }
+
+    function loadProgress() {
+        const savedText = localStorage.getItem('typingAppText');
+        const savedIndex = localStorage.getItem('typingAppIndex');
+
+        if (savedText) {
+            testText = savedText;
+        }
+        
+        loadText(testText);
+        
+        if (savedIndex && savedIndex > 0 && savedIndex < testText.length) {
+            currentInputIndex = parseInt(savedIndex, 10);
+            // Simulate having typed up to that point
+            textInput.value = testText.substring(0, currentInputIndex); 
+            updateTextDisplayUI(textInput.value);
+            // Focus the input to continue typing immediately
+            textInput.focus(); 
+        }
+    }
 
     function loadText(text) {
         if (!text || text.trim().length === 0) {
-            alert("Error: Imported file is empty or could not be read.");
+            alert("Error: Text is empty.");
             return;
         }
         testText = text;
-        textDisplay.innerHTML = ''; // Clear existing content
+        textDisplay.innerHTML = '';
         testText.split('').forEach(character => {
             const charSpan = document.createElement('span');
             charSpan.innerText = character;
             charSpan.classList.add('correct');
             textDisplay.appendChild(charSpan);
         });
-        textInput.value = '';
-        textInput.focus();
         resetMetrics();
-        // Optional: Scroll to the top of the text area when a new book loads
-        textDisplay.scrollTop = 0; 
+        currentInputIndex = 0;
+        saveProgress(); // Save the new text as the default
     }
 
     function resetMetrics() {
@@ -43,6 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
         timerEl.textContent = '0s';
         wpmEl.textContent = '0';
         accuracyEl.textContent = '100%';
+        currentInputIndex = 0;
+        textInput.value = '';
+        loadText(testText); // Re-render text to clear highlights
+        saveProgress();
     }
 
     function startTimer() {
@@ -66,18 +96,12 @@ document.addEventListener('DOMContentLoaded', () => {
             accuracyEl.textContent = `${accuracy}%`;
         }
     }
-
-    textInput.addEventListener('input', (e) => {
-        if (!testActive) {
-            testActive = true;
-            startTimer();
-        }
-
-        const typedValue = textInput.value;
+    
+    // Helper function to update UI after input
+    function updateTextDisplayUI(typedValue) {
         const testChars = textDisplay.querySelectorAll('span');
         typedCharacters = typedValue.length;
         correctCharacters = 0;
-
         let isMismatch = false;
 
         for (let i = 0; i < testChars.length; i++) {
@@ -87,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typedChar == null) {
                 testChar.classList.remove('incorrect', 'current');
                 testChar.classList.add('correct');
-                isMismatch = true;
             } else if (typedChar === testChar.innerText) {
                 testChar.classList.remove('incorrect', 'current');
                 correctCharacters++;
@@ -101,52 +124,68 @@ document.addEventListener('DOMContentLoaded', () => {
                 testChar.classList.add('current');
             }
         }
+        return isMismatch;
+    }
+
+    // --- Strict Mode Logic ---
+    textInput.addEventListener('input', (e) => {
+        if (!testActive) {
+            testActive = true;
+            startTimer();
+        }
+
+        const typedValue = textInput.value;
+        const lastTypedChar = typedValue[typedValue.length - 1];
+        const targetChar = testText[typedValue.length - 1];
+
+        // STRICT MODE CHECK: If the last character typed is wrong, restrict input field.
+        if (lastTypedChar !== targetChar && typedValue.length > currentInputIndex) {
+             // Revert the input field to its correct state
+             textInput.value = typedValue.substring(0, typedValue.length - 1);
+             // Optional: Add a visual shake/flash for the error
+             textDisplay.classList.add('error-flash');
+             setTimeout(() => textDisplay.classList.remove('error-flash'), 200);
+             return; // Stop processing further
+        }
+        
+        // If correct, update the index and save progress
+        if (typedValue.length > currentInputIndex && lastTypedChar === targetChar) {
+            currentInputIndex = typedValue.length;
+            saveProgress(); // Save current position
+        }
+
+        const isMismatch = updateTextDisplayUI(typedValue);
+
 
         if (!isMismatch && typedValue.length === testText.length) {
             clearInterval(timerInterval);
             testActive = false;
             alert("Test finished! Great job!");
+            currentInputIndex = 0; // Reset index for next test
+            saveProgress();
         }
     });
-
+    
     // Handle File Upload (Importing Books)
     fileUpload.addEventListener('change', (event) => {
-        const file = event.target.files[0]; // Get the first selected file
-        
+        const file = event.target.files[0];
         if (file) {
-            // Optional check for file size (large files can cause issues)
-            if (file.size > 5 * 1024 * 1024) { // 5MB limit
-                alert("File is too large. Please select a smaller text file.");
-                event.target.value = null; // Clear the input
-                return;
-            }
-
             const reader = new FileReader();
-            
-            // This is the key part: The onload function runs AFTER the file is fully read.
             reader.onload = (e) => {
-                // e.target.result contains the raw text content of the file
                 loadText(e.target.result); 
-                console.log("File loaded successfully into the app."); // Check your browser console
+                event.target.value = null; // Clear input field visually
             };
-
-            // Add error handling
-            reader.onerror = (e) => {
-                console.error("FileReader error: ", e.target.error);
-                alert("Error reading the file: " + e.target.error.name);
-            };
-
-            // Start reading the file as text
+            reader.onerror = (e) => console.error("FileReader error: ", e.target.error);
             reader.readAsText(file);
-        } else {
-            console.log("No file selected or selection was cancelled.");
         }
     });
 
     resetBtn.addEventListener('click', () => {
-        loadText(testText);
+        resetMetrics();
+        // Force the display to re-render default text highlights
+        updateTextDisplayUI(textInput.value); 
     });
 
-    // Initialize with default text on load
-    loadText(testText);
+    // Initialize with default text or saved progress on load
+    loadProgress();
 });
