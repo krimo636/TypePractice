@@ -32,7 +32,7 @@ body {
     min-height: 100vh;
     margin: 0;
     color: var(--text-color);
-    transition: background-color 0.5s, color 0.5s; /* Smooth transition for theme change */
+    transition: background-color 0.5s, color 0.5s;
 }
 
 .container {
@@ -52,13 +52,14 @@ h1 {
     font-size: 1.8em;
 }
 
+/* INCREASED HEIGHT HERE */
 #text-display {
     border: 1px solid var(--input-border);
     padding: 20px;
     margin-bottom: 20px;
     font-size: 1.4em;
     line-height: 1.6;
-    height: 160px;
+    height: 250px; /* Made the typing area 250px tall */
     overflow-y: auto;
     text-align: left;
     white-space: pre-wrap;
@@ -66,9 +67,9 @@ h1 {
     background-color: var(--background-color);
     cursor: text;
     transition: background-color 0.5s;
+    color: var(--text-color); /* Ensure text color uses variable */
 }
 
-/* Styles for correct and incorrect characters */
 .correct { color: var(--text-color); }
 .incorrect {
     background-color: var(--error-bg);
@@ -84,10 +85,11 @@ h1 {
 .error-flash { animation: flash 0.2s linear 2; }
 
 
+/* INCREASED HEIGHT/PADDING HERE */
 #text-input {
     width: 98%;
-    padding: 15px;
-    font-size: 1.2em;
+    padding: 20px 15px; /* Added more vertical padding */
+    font-size: 1.4em; /* Larger font size in input field */
     margin-bottom: 20px;
     border: 2px solid var(--primary-color);
     border-radius: 6px;
@@ -132,6 +134,7 @@ button:hover { background-color: #0056b3; }
     justify-content: space-around;
     padding-top: 15px;
     border-top: 1px solid var(--input-border);
+    color: var(--text-color); /* Ensure metrics text uses variable */
 }
 
 .metrics p { font-size: 1.1em; font-weight: bold; margin: 0; }
