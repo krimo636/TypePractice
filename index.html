@@ -3,34 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Offline Typing App (with PDF)</title>
+    <title>My Personal Typing App</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Include PDF.js library from CDN -->
-    <script src="https://mozilla.github.io/pdf.js/build/pdf.mjs" type="module"></script>
 </head>
 <body>
     <div class="container">
         <h1>My Personal Typing Practice</h1>
         <div id="text-display">
-            <!-- Text goes here. Each character will be a span -->
+            <!-- Text content dynamically loaded here -->
         </div>
         <textarea id="text-input" autofocus placeholder="Start typing here..."></textarea>
         
         <div class="controls">
-            <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Offline Typing App</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-            <label for="book-upload">Import a Book (TXT or PDF):</label>
-            <!-- Updated accept attribute to include PDF -->
-            <input type="file" id="book-upload" accept=".txt, .pdf">
+            <label for="book-upload">Import a Text File (.txt):</label>
+            <input type="file" id="book-upload" accept=".txt">
             <button id="reset-btn">Reset Test</button>
+            <button id="theme-toggle-btn">Toggle Dark Mode</button>
         </div>
 
         <div class="metrics">
@@ -39,8 +27,6 @@
             <p>Accuracy: <span id="accuracy">100%</span></p>
         </div>
     </div>
-    <script src="script.js" type="module"></script> <!-- Note type="module" is needed -->
+    <script src="script.js"></script>
 </body>
 </html>
-
-
