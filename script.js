@@ -6,15 +6,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const timerEl = document.getElementById('timer');
     const wpmEl = document.getElementById('wpm');
     const accuracyEl = document.getElementById('accuracy');
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
 
-    // Default text, if no saved text exists
-    let testText = "The quick brown fox jumps over the lazy dog. This is some default text for practice.";
+    let testText = "The quick brown fox jumps over the lazy dog. This is some default text for practice. Use the file input below to load your own text.";
     let startTime;
     let timerInterval;
     let typedCharacters = 0;
     let correctCharacters = 0;
     let testActive = false;
-    let currentInputIndex = 0; // Tracks where we are in the text
+    let currentInputIndex = 0;
 
     // --- Progress Tracking (localStorage) ---
     function saveProgress() {
@@ -34,21 +34,19 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (savedIndex && savedIndex > 0 && savedIndex < testText.length) {
             currentInputIndex = parseInt(savedIndex, 10);
-            // Simulate having typed up to that point
             textInput.value = testText.substring(0, currentInputIndex); 
             updateTextDisplayUI(textInput.value);
-            // Focus the input to continue typing immediately
             textInput.focus(); 
         }
     }
 
     function loadText(text) {
         if (!text || text.trim().length === 0) {
-            alert("Error: Text is empty.");
+            alert("Error: Imported file is empty or could not be read.");
             return;
         }
         testText = text;
-        textDisplay.innerHTML = '';
+        textDisplay.innerHTML = ''; 
         testText.split('').forEach(character => {
             const charSpan = document.createElement('span');
             charSpan.innerText = character;
@@ -57,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         resetMetrics();
         currentInputIndex = 0;
-        saveProgress(); // Save the new text as the default
+        saveProgress();
     }
 
     function resetMetrics() {
@@ -71,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         accuracyEl.textContent = '100%';
         currentInputIndex = 0;
         textInput.value = '';
-        loadText(testText); // Re-render text to clear highlights
+        loadText(testText);
         saveProgress();
     }
 
@@ -97,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Helper function to update UI after input
     function updateTextDisplayUI(typedValue) {
         const testChars = textDisplay.querySelectorAll('span');
         typedCharacters = typedValue.length;
@@ -140,40 +137,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // STRICT MODE CHECK: If the last character typed is wrong, restrict input field.
         if (lastTypedChar !== targetChar && typedValue.length > currentInputIndex) {
-             // Revert the input field to its correct state
              textInput.value = typedValue.substring(0, typedValue.length - 1);
-             // Optional: Add a visual shake/flash for the error
              textDisplay.classList.add('error-flash');
              setTimeout(() => textDisplay.classList.remove('error-flash'), 200);
-             return; // Stop processing further
+             return; 
         }
         
-        // If correct, update the index and save progress
         if (typedValue.length > currentInputIndex && lastTypedChar === targetChar) {
             currentInputIndex = typedValue.length;
-            saveProgress(); // Save current position
+            saveProgress();
         }
 
         const isMismatch = updateTextDisplayUI(typedValue);
-
 
         if (!isMismatch && typedValue.length === testText.length) {
             clearInterval(timerInterval);
             testActive = false;
             alert("Test finished! Great job!");
-            currentInputIndex = 0; // Reset index for next test
+            currentInputIndex = 0;
             saveProgress();
         }
     });
     
-    // Handle File Upload (Importing Books)
+    // Handle File Upload
     fileUpload.addEventListener('change', (event) => {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
                 loadText(e.target.result); 
-                event.target.value = null; // Clear input field visually
+                event.target.value = null;
             };
             reader.onerror = (e) => console.error("FileReader error: ", e.target.error);
             reader.readAsText(file);
@@ -182,12 +175,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     resetBtn.addEventListener('click', () => {
         resetMetrics();
-        // Force the display to re-render default text highlights
         updateTextDisplayUI(textInput.value); 
     });
-        // --- Theme Toggle Logic ---
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    
+
+    // --- Theme Toggle Logic ---
     function setTheme(theme) {
         if (theme === 'dark') {
             document.body.classList.add('dark-theme');
@@ -199,26 +190,18 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('typingAppTheme', theme);
     }
 
-    // Check saved theme on load
     function loadTheme() {
-        const savedTheme = localStorage.getItem('typingAppTheme') || 'light'; // Default to light
+        const savedTheme = localStorage.getItem('typingAppTheme') || 'light';
         setTheme(savedTheme);
     }
 
-    // Toggle theme on button click
     themeToggleBtn.addEventListener('click', () => {
         const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';
         setTheme(newTheme);
     });
     
-    // Call loadTheme after all functions are defined, right above loadProgress()
-    loadTheme(); 
-    loadProgress(); // This was already here
-});
-
-
-    // Initialize with default text or saved progress on load
+    // Initialize everything on load
+    loadTheme();
     loadProgress();
 });
-
